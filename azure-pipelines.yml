@@ -24,6 +24,9 @@ steps:
     scannerMode: 'MSBuild'
     projectKey: 'JamesSpiva_Revature_Project1'
     projectName: 'jamesspiva-github'
+    extraProperties: |
+      sonar.cs.opencover.reportsPaths="$(Build.ArtifactStagingDirectory)/coverage/*"
+      sonar.cs.vstest.reportsPaths="$(Build.ArtifactStagingDirectory)/test/*.trx"
   displayName: 'Sonar Prepare Analysis'
 
 - script: dotnet build --configuration $(buildConfiguration)
@@ -57,6 +60,7 @@ steps:
   inputs:
     command: 'publish'
     projects: '$(pathtoproject)/*.csproj'
+  displayName: 'Publish web project'
 
 - task: AzureWebApp@1
   inputs:
@@ -65,3 +69,4 @@ steps:
     appName: 'PizzaBoxless'
     package: '$(System.DefaultWorkingDirectory)/$(pathtoproject)/**/*.zip'
     deploymentMethod: 'auto'
+  displayName: 'Create website'
