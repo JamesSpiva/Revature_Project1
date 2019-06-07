@@ -1,0 +1,167 @@
+﻿@model PizzaBox.Models.OrderModel
+
+@{
+    ViewData["Title"] = "Create Order";
+
+    RestaurantModel restaurant = (RestaurantModel)ViewData["Restaurant"];
+}
+
+<h1>Create Order</h1>
+<h5><font color="red">@TempData["ErrorMessage"]</font></h5>
+<h5>
+    @if (Model.Restaurant.ID == null)
+    {
+        <strike>Finish</strike>
+        <font color="red">Please select a restaurant</font>
+    }
+    else if (DateTime.Now.Hour < restaurant.Open || DateTime.Now.Hour >= restaurant.Close)
+    {
+        <strike>Finish</strike>
+        <font color="red">Restaurant is not currently open</font>
+    }
+    else if (!(Model.PizzaCount > 0))
+    {
+        <strike>Finish</strike>
+        <font color="red">Order must contain at least one pizza</font>
+    }
+    else if (Model.Price > restaurant.Constraints.MaxPrice)
+    {
+        <strike>Finish</strike>
+        <font color="red">@restaurant.Constraints.MaxPrice$ maximum total cost</font>
+    }
+    else if (Model.PizzaCount > restaurant.Constraints.MaxPizza)
+    {
+        <strike>Finish</strike>
+        <font color="red">@restaurant.Constraints.MaxPizza pizzas max</font>
+    }
+    else
+    {
+        @Html.ActionLink("Finish", "FinishOrder")
+    }
+</h5>
+<h5>
+    @Html.ActionLink("Cancel", "CancelOrder")
+</h5>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Restaurant)
+                @if (Model.Pizzas.Count == 0)
+                {
+                    @Html.ActionLink("Select", "SelectRestaurant", "Restaurant")
+                }
+                else
+                {
+                    <strike>Select</strike>
+                }
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PizzaCount)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                @if (Model.Restaurant.ID != null)
+                {
+                    @Html.DisplayFor(modelItem => modelItem.Restaurant.Name);
+                    <span> - </span>
+                    @Html.DisplayFor(modelItem => modelItem.Restaurant.Address);
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.Price)$
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.PizzaCount)
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>@Html.DisplayNameFor(model => model.Pizzas)</h3>
+@if (Model.Restaurant.ID != null)
+{
+    <h5>@Html.ActionLink("New", "CreatePizza")</h5>
+}
+else
+{
+    <h5><strike>New</strike></h5>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Pizzas.First().Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pizzas.First().Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pizzas.First().Size)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pizzas.First().Crust)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pizzas.First().Preset)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pizzas.First().Toppings)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Pizzas)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)$
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Size)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Crust)
+                </td>
+                <td>
+                    @if (item.Preset == null)
+                    {
+                        <span>None</span>
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.Preset)
+                    }
+                </td>
+                <td>
+                    @if (item.Toppings.ToList().Count == 0)
+                    {
+                        <span>None</span>
+                    }
+                    else
+                    {
+                        @foreach (var t in item.Toppings)
+                        {
+                            @t
+                            <span>, </span>
+                        }
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink("Remove", "RemovePizza", Model.Pizzas.IndexOf(item))
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,73 @@
+﻿@model PizzaBox.Models.PizzaModel
+
+@{
+    ViewData["Title"] = "Create Pizza";
+
+    RestaurantModel restaurant = ViewBag.Restaurant;
+}
+
+<h1>Create Pizza</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreatePizza">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input asp-for="MaxToppings" type="hidden" value=@restaurant.Constraints.MaxToppings />
+                <span asp-validation-for="MaxToppings" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SizeID" class="control-label"></label>
+                <select asp-for="SizeID" class="form-control">
+                    @foreach (var s in restaurant.Sizes)
+                    {
+                        <option value="@s.ID">@s.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="SizeID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CrustID" class="control-label"></label>
+                <select asp-for="CrustID" class="form-control">
+                    @foreach (var s in restaurant.Crusts)
+                    {
+                        <option value="@s.ID">@s.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="CrustID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PresetID" class="control-label"></label>
+                <select asp-for="PresetID" class="form-control">
+                    <option value="@null">none</option>
+                    @foreach (var s in restaurant.Presets)
+                    {
+                        <option value="@s.ID">@s.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="PresetID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ToppingIDs" class="control-label"></label>
+                <select asp-for="ToppingIDs" class="form-control">
+                    @foreach (var s in restaurant.Toppings)
+                    {
+                        <option value="@s.ID">@s.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="ToppingIDs" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Amount" class="control-label"></label>
+                <input asp-for="Amount" class="form-control" value="1"/>
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+            <div class="form-group">
+                <h5>@Html.ActionLink("Cancel", "CreateOrder")</h5>
+            </div>
+        </form>
+    </div>
+</div>

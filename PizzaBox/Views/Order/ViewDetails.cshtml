@@ -1,0 +1,114 @@
+﻿@model PizzaBox.Models.OrderModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Restaurant)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PizzaCount)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.Restaurant.Name)
+                <span> - </span>
+                @Html.DisplayFor(model => model.Restaurant.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.Price)$
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.PizzaCount)
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>@Html.DisplayNameFor(model => model.Pizzas)</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Pizzas.First().Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pizzas.First().Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pizzas.First().Size)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pizzas.First().Crust)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pizzas.First().Preset)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pizzas.First().Toppings)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Pizzas)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)$
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Size)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Crust)
+                </td>
+                <td>
+                    @if (item.PresetID == null)
+                    {
+                        @Html.Display("None")
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.Preset)
+                    }
+                </td>
+                <td>
+                    @if (item.Toppings.ToList().Count == 0)
+                    {
+                        <span>None</span>
+                    }
+                    else
+                    {
+                        @foreach (var t in item.Toppings)
+                        {
+                            @t
+                            <span>, </span>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

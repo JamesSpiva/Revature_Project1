@@ -1,0 +1,54 @@
+﻿@model IEnumerable<PizzaBox.Models.OrderModel>
+
+@{
+    ViewData["Title"] = "View Orders";
+}
+
+<h1>View Orders</h1>
+
+<h3>@Html.ActionLink("New Order", "CreateOrder")</h3>
+<h3>@Html.ActionLink("Log out", "Logout", "Login")</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Restaurant)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PizzaCount)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Restaurant.Name)
+                    <span> - </span>
+                    @Html.DisplayFor(modelItem => item.Restaurant.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)$
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PizzaCount)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "ViewDetails", new { id = item.ID })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

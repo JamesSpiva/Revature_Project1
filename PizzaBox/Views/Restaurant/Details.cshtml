@@ -1,0 +1,96 @@
+﻿@model PizzaBox.Models.RestaurantModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Open)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.Open):00 -
+                @Html.DisplayFor(modelItem => modelItem.Close):00
+            </td>
+            <td>
+                @Html.ActionLink("Orders", "ViewRestaurantOrders", "Order", new { id = Model.Id })
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+@Html.DisplayNameFor(model => model.CrustInventory)
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Crusts)
+            </th>
+            <th>
+                Amount
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.CrustInventory)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@Html.DisplayNameFor(model => model.ToppingInventory)
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Toppings)
+            </th>
+            <th>
+                Amount
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ToppingInventory)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
