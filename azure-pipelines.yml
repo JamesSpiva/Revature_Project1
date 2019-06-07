@@ -12,9 +12,9 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  pathtosolution: 'Neon_Icon/'
-  pathtoproject: 'Neon_Icon/WebClient'
-  pathtotest: 'Neon_Icon/Testing'
+  pathtosolution: ''
+  pathtoproject: 'PizzaBox'
+  pathtotest: 'PizzaBox.Testing'
 
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
@@ -36,6 +36,6 @@ steps:
   inputs:
     azureSubscription: 'Free Trial(d30e4b38-6958-43b6-ad79-a05f240c8380)'
     appType: 'webApp'
-    appName: 'NeonIcons'
+    appName: 'PizzaBoxless'
     package: '$(System.DefaultWorkingDirectory)/$(pathtoproject)/**/*.zip'
     deploymentMethod: 'auto'
