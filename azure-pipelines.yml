@@ -1,0 +1,67 @@
+# ASP.NET Core
+
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-2019'
+
+variables:
+  buildConfiguration: 'Release'
+  pathtosolution: ''
+  pathtoproject: 'PizzaBox'
+  pathtotest: 'PizzaBox.Testing'
+
+steps:
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'PizzaBoxless'
+    organization: 'jamesspiva-github'
+    scannerMode: 'MSBuild'
+    projectKey: 'JamesSpiva_Revature_Project1'
+    projectName: 'jamesspiva-github'
+  displayName: 'Sonar Prepare Analysis'
+
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'dotnet build $(buildConfiguration)'
+  workingDirectory: $(pathtosolution)
+
+- script: dotnet test
+    --configuration $(buildConfiguration)
+    --no-build
+    --results-directory $(Build.ArtifactStagingDirectory)/test/
+      /p:CollectCoverage=true
+      /p:CoverletOutputFormat=opencover
+      /p:CoverletOutput='$(Build.ArtifactStagingDirectory)/coverage/'
+  displayName: 'dotnet test'
+  workingDirectory: $(pathtosolution)
+
+- task: SonarCloudAnalyze@1
+
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'VSTest'
+    testResultsFiles: '*.trx'
+    searchFolder: '$(Build.ArtifactStagingDirectory)/test'
+  displayName: 'Publish test results '
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    projects: '$(pathtoproject)/*.csproj'
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'Free Trial(d30e4b38-6958-43b6-ad79-a05f240c8380)'
+    appType: 'webApp'
+    appName: 'PizzaBoxless'
+    package: '$(System.DefaultWorkingDirectory)/$(pathtoproject)/**/*.zip'
+    deploymentMethod: 'auto'
