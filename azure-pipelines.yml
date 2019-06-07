@@ -17,7 +17,14 @@ variables:
   pathtotest: 'PizzaBox.Testing'
 
 steps:
-
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'PizzaBoxless'
+    organization: 'jamesspiva-github'
+    scannerMode: 'MSBuild'
+    projectKey: 'JamesSpiva_Revature_Project1'
+    projectName: 'jamesspiva-github'
+  displayName: 'Sonar Prepare Analysis'
 
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
@@ -26,8 +33,25 @@ steps:
 - script: dotnet test
     --configuration $(buildConfiguration)
     --no-build
+    --results-directory $(Build.ArtifactStagingDirectory)/test/
+      /p:CollectCoverage=true
+      /p:CoverletOutputFormat=opencover
+      /p:CoverletOutput='$(Build.ArtifactStagingDirectory)/coverage/'
   displayName: 'dotnet test'
   workingDirectory: $(pathtosolution)
+
+- task: SonarCloudAnalyze@1
+
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'VSTest'
+    testResultsFiles: '*.trx'
+    searchFolder: '$(Build.ArtifactStagingDirectory)/test'
+  displayName: 'Publish test results '
 
 - task: DotNetCoreCLI@2
   inputs:
